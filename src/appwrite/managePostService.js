@@ -1,5 +1,6 @@
 import { Client, Databases, Storage, ID } from "appwrite";
 import envConf from "../envConf/envConf";
+import { comment } from "postcss";
 
 class ManagePostService {
   constructor() {
@@ -43,13 +44,13 @@ class ManagePostService {
     }
   }
 
-  async updatePost({ slug, title, content, imageID,views }) {
+  async updatePost({ slug, title, content, imageID,views ,likedBy,comments}) {
     try {
       const doc = await this.database.updateDocument(
         envConf.appwriteDatabaseID,
         envConf.appwriteCollectionID,
         slug,
-        { title: title, content: content, imageID: imageID,views:views }
+        { title: title, content: content, imageID: imageID,views:views ,likedBy :likedBy,comments : comments}
       );
       return doc ? doc : null;
     } catch (error) {

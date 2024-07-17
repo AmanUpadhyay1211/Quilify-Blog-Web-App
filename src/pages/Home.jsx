@@ -14,9 +14,9 @@ function Home() {
     const getPosts = async () => {
       try {
         const dbPosts = await managePostService.getPost();
-        console.log(dbPosts)
         if (dbPosts) {
           setPosts(dbPosts.documents);
+          console.log(posts)
         }
       } catch (err) {
         console.log(err);
@@ -26,7 +26,7 @@ function Home() {
     };
 
     getPosts();
-    // console.log(posts)
+  
   }, [userStatus, userData]);
 
   if (loading) {

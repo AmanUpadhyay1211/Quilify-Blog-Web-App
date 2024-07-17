@@ -1,54 +1,89 @@
-import React from 'react'
-import { Link,NavLink } from 'react-router-dom'
-import { LogoutBtn, Logo } from "../index"
+import React, { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { LogoutBtn, Logo } from "../index";
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { FiMenu, FiX } from 'react-icons/fi'; // Icons for hamburger menu
 
 function Header() {
-  const userStatus = useSelector((state) => state.auth.status)
+  const userStatus = useSelector((state) => state.auth.status);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = [{ name: "Home", url: "/", active: true },
-  { name: "Log-In", url: "/login", active: !userStatus },
-  { name: "Sign-Up", url: "/signup", active: !userStatus },
-  { name: "All-Posts", url: "/all-post", active: userStatus },
-  { name: "Add-Post", url: "/add-post", active: userStatus },
-  ]
+  const navItems = [
+    { name: "Home", url: "/", active: true },
+    { name: "Log-In", url: "/login", active: !userStatus },
+    { name: "Sign-Up", url: "/signup", active: !userStatus },
+    { name: "All-Posts", url: "/all-post", active: userStatus },
+    { name: "Add-Post", url: "/add-post", active: userStatus },
+  ];
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <header className='py-3 shadow bg-gray-500'>
-        <nav className='flex'>
-          <div className='mr-4'>
-            <Link to='/'>
-              <Logo width='70px' />
-
-            </Link>
-          </div>
-          <ul className='flex ml-auto'>
-            {navItems.map((item) =>
+    <header className="py-3 shadow bg-gray-800 text-white">
+      <nav className="container mx-auto flex justify-between items-center px-4">
+        <div className="flex items-center">
+          <Link to="/">
+            <Logo width="70px" />
+          </Link>
+        </div>
+        <div className="hidden md:flex space-x-6">
+          {navItems.map(
+            (item) =>
               item.active && (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.url}
-                    className={({ isActive }) =>
-                      `inline-block px-6 py-2 rounded-full duration-200 ${
-                        isActive ? 'bg-blue-500 text-white' : 'hover:bg-blue-100 hover:text-gray-800'
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
+                <NavLink
+                  key={item.name}
+                  to={item.url}
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-md text-sm font-medium ${
+                      isActive ? 'bg-blue-500' : 'hover:bg-blue-700'
+                    }`
+                  }
+                >
+                  {item.name}
+                </NavLink>
               )
+          )}
+          {userStatus && <LogoutBtn />}
+        </div>
+        <div className="md:hidden">
+          <button onClick={toggleMenu} className="focus:outline-none">
+            {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
+        </div>
+      </nav>
+      {isOpen && (
+        <div className="md:hidden bg-gray-800">
+          <ul className="space-y-4 p-4">
+            {navItems.map(
+              (item) =>
+                item.active && (
+                  <li key={item.name}>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        `block px-3 py-2 rounded-md text-base font-medium ${
+                          isActive ? 'bg-blue-500' : 'hover:bg-blue-700'
+                        }`
+                      }
+                      onClick={toggleMenu} // Close menu on item click
+                    >
+                      {item.name}
+                    </NavLink>
+                  </li>
+                )
             )}
             {userStatus && (
               <li>
-                <LogoutBtn />
+                <LogoutBtn onClick={toggleMenu} />
               </li>
             )}
           </ul>
-        </nav>
+        </div>
+      )}
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

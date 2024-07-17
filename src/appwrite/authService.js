@@ -25,19 +25,6 @@ class AuthService {
     }
   }
 
-  async login({ email, password }) {
-    try {
-      const session = await this.account.createEmailPasswordSession(email, password);
-      if (session) {
-        return session;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async createSession({ email, password }) {
     try {
       const session = await this.account.createEmailPasswordSession(email, password);
@@ -59,18 +46,6 @@ class AuthService {
       throw error;
     }
   }
-
-
-//   ... your initilization functions
-
-// export async function getLoggedInUser() {
-//   try {
-//     const { account } = await createSessionClient();
-//     return await account.get();
-//   } catch (error) {
-//     return null;
-//   }
-// }
 
   async getCurrentUser() {
     try {

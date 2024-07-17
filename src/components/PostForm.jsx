@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { RealTimeEditor, Btn, Input, Logo, Select } from "./index";
+import { RealTimeEditor, Btn, Input, Select } from "./index";
 import managePostService from '../appwrite/managePostService';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 function PostForm({ post }) {
     const userData = useSelector((state) => state.auth.userData);
-    console.log(userData)
     const navigate = useNavigate();
     const [error, setError] = useState("");
 
@@ -24,10 +23,10 @@ function PostForm({ post }) {
         setError("");
         try {
             if (post) {
+                const oldImg = await managePostService.deleteFile(post.imageID);
                 const newImg = data.image[0] && await managePostService.uploadFile(data.image[0]);
-                const oldImg = await managePostService.deleteFile({slug:post.imageID});
                 if (newImg && oldImg) {
-                    const updatedPost = await managePostService.updatePost({ slug: post.$id, title: data.title, content: data.content, imageID: newImg.$id });
+                    const updatedPost = await managePostService.updatePost({ slug: post.$id, title: data.title, content: data.content, imageID: newImg.$id,likedBy : post.likedBy });
                     if (updatedPost) {
                         navigate(`/post/${updatedPost.$id}`);
                     }

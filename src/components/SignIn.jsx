@@ -17,7 +17,7 @@ function SignIn() {
     const onSignIn = async (data) => {
         setError("");
         try {
-            const loginSession = await authService.login({...data});
+            const loginSession = await authService.createSession({...data});
             if (loginSession) {
                 const userData = await authService.getCurrentUser();
                 if (userData) {
